@@ -100,6 +100,7 @@ export function UsersPanel({ tenantId, users }: { tenantId: string; users: Tenan
               className="h-11 rounded-lg border border-input bg-white px-3 text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               <option value="owner">Eigenaar</option>
+              <option value="compliance">Compliancebeheerder</option>
               <option value="editor">Bewerker</option>
               <option value="viewer">Lezer</option>
             </select>

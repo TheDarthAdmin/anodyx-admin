@@ -1,3 +1,4 @@
+import { Check, Minus } from "@phosphor-icons/react/ssr";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -6,9 +7,12 @@ import { SupportStart } from "@/components/tenants/support-start";
 import { TenantControls } from "@/components/tenants/tenant-controls";
 import { UsersPanel } from "@/components/tenants/users-panel";
 import { UsageMeter } from "@/components/usage-meter";
-import { activeSessions, formatDate, formatDateTime, formatNumber, PLAN_LABELS, STATUS_LABELS } from "@/lib/format";
+import { activeSessions, FEATURE_LABELS, formatDate, formatDateTime, formatNumber, PLAN_LABELS, STATUS_LABELS } from "@/lib/format";
 import { platformGet } from "@/lib/server/api";
-import type { TenantDetail } from "@/lib/types";
+import type { Feature, TenantDetail } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+const FEATURES: Feature[] = ["supplier_portal", "api", "webhooks", "erp", "sso"];
 
 export const metadata: Metadata = { title: "Tenant" };
 
@@ -85,6 +89,23 @@ export default async function TenantPage({ params }: PageProps<"/tenants/[id]">)
                 </div>
               ))}
             </dl>
+            {t.limits.features ? (
+              <div className="grid gap-2">
+                <h3 className="text-sm text-muted-foreground">In het plan {PLAN_LABELS[t.plan]}</h3>
+                <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                  {FEATURES.map((f) => {
+                    const on = t.limits.features?.includes(f) ?? false;
+                    return (
+                      <li key={f} className={cn("flex items-center gap-1.5", !on && "text-muted-foreground")}>
+                        {on ? <Check aria-hidden className="size-4" weight="bold" /> : <Minus aria-hidden className="size-4" />}
+                        <span>{FEATURE_LABELS[f]}</span>
+                        <span className="sr-only">{on ? "inbegrepen" : "niet inbegrepen"}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ) : null}
           </Section>
 
           <Section title="Gebruikers">

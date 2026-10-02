@@ -1,14 +1,33 @@
-import type { Plan, TenantStatus } from "@/lib/types";
+import type { Feature, Plan, TenantStatus } from "@/lib/types";
 
 export const PLAN_LABELS: Record<Plan, string> = {
   trial: "Proef",
   starter: "Starter",
-  growth: "Groei",
-  volume: "Volume",
+  professional: "Professional",
+  business: "Business",
+  enterprise: "Enterprise",
   archive: "Archief",
 };
 
-export const PLANS: Plan[] = ["trial", "starter", "growth", "volume", "archive"];
+export const PLANS: Plan[] = ["trial", "starter", "professional", "business", "enterprise", "archive"];
+
+/** What a plan includes, in one line (feature map in the API: services/plans.py, ADR 0017). */
+export const PLAN_SUMMARIES: Record<Plan, string> = {
+  trial: "Alles, voor demo's en proefperiodes. Volume als Professional.",
+  starter: "Modellen, units en CSV-import. Geen leveranciersportaal, API of koppelingen.",
+  professional: "Plus leveranciersportaal, API en webhooks.",
+  business: "Plus ERP-koppelingen en meer volume.",
+  enterprise: "Alles, ook single sign-on. Alleen hier toe te wijzen, niet via Stripe.",
+  archive: "Alleen lezen: paspoorten blijven online, bestaande API-sleutels lezen nog.",
+};
+
+export const FEATURE_LABELS: Record<Feature, string> = {
+  supplier_portal: "Leveranciersportaal",
+  api: "API",
+  webhooks: "Webhooks",
+  erp: "ERP-koppelingen",
+  sso: "Single sign-on",
+};
 
 export const STATUS_LABELS: Record<TenantStatus, string> = {
   active: "Actief",
@@ -17,6 +36,7 @@ export const STATUS_LABELS: Record<TenantStatus, string> = {
 
 export const ROLE_LABELS: Record<string, string> = {
   owner: "Eigenaar",
+  compliance: "Compliancebeheerder",
   editor: "Bewerker",
   viewer: "Lezer",
 };

@@ -99,12 +99,31 @@ export default async function OverviewPage() {
             </Section>
           ) : null}
 
+          {overview.usage_30d ? (
+            <Section title="Verbruik, laatste 30 dagen">
+              <Panel className="divide-y divide-line">
+                {[
+                  ["Nieuwe paspoorten", overview.usage_30d.passports_created],
+                  ["Actieve paspoorten", overview.usage_30d.passports_active],
+                  ["API-oproepen", overview.usage_30d.api_calls],
+                  ["Scans", overview.usage_30d.scans],
+                ].map(([label, value]) => (
+                  <div key={label as string} className="flex items-baseline justify-between gap-3 px-5 py-3">
+                    <span>{label}</span>
+                    <span className="num font-medium">{formatNumber(value as number)}</span>
+                  </div>
+                ))}
+              </Panel>
+              <p className="mt-2 text-sm text-muted-foreground">Alle tenants samen, uit de dagelijkse verbruiksregistratie.</p>
+            </Section>
+          ) : null}
+
           <Section title="Plannen">
             <ul className="grid gap-3">
               {PLANS.map((plan) => {
                 const n = overview.plans[plan] ?? 0;
                 return (
-                  <li key={plan} className="grid grid-cols-[88px_1fr_40px] items-center gap-3 text-sm">
+                  <li key={plan} className="grid grid-cols-[104px_1fr_40px] items-center gap-3 text-sm">
                     <span>{PLAN_LABELS[plan]}</span>
                     <span className="h-2 rounded-full bg-paper-deep">
                       <span className={cn("block h-full rounded-full bg-ink", n === 0 && "hidden")} style={{ width: `${(n / maxPlan) * 100}%` }} />

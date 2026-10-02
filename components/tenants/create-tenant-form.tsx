@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { messageFor, postJson } from "@/lib/api";
-import { PLAN_LABELS, PLANS } from "@/lib/format";
+import { PLAN_LABELS, PLAN_SUMMARIES, PLANS } from "@/lib/format";
 import type { Plan } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -73,13 +73,22 @@ export function CreateTenantForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-2">
           <Label htmlFor="plan">Plan</Label>
-          <select id="plan" className={selectClass} value={plan} onChange={(e) => setPlan(e.target.value as Plan)}>
+          <select
+            id="plan"
+            aria-describedby="plan-summary"
+            className={selectClass}
+            value={plan}
+            onChange={(e) => setPlan(e.target.value as Plan)}
+          >
             {PLANS.map((p) => (
               <option key={p} value={p}>
                 {PLAN_LABELS[p]}
               </option>
             ))}
           </select>
+          <p id="plan-summary" className="text-sm text-muted-foreground">
+            {PLAN_SUMMARIES[plan]}
+          </p>
         </div>
         {plan === "trial" ? (
           <div className="grid gap-2">

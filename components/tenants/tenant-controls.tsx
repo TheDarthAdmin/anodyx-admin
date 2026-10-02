@@ -7,7 +7,7 @@ import { ConfirmDialog } from "@/components/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { messageFor, requestJson } from "@/lib/api";
-import { PLAN_LABELS, PLANS } from "@/lib/format";
+import { PLAN_LABELS, PLAN_SUMMARIES, PLANS } from "@/lib/format";
 import type { Plan, TenantDetail } from "@/lib/types";
 
 const selectClass =
@@ -49,13 +49,22 @@ export function TenantControls({ tenant }: { tenant: TenantDetail }) {
       >
         <div className="grid gap-2">
           <Label htmlFor="plan">Plan</Label>
-          <select id="plan" className={selectClass} value={plan} onChange={(e) => setPlan(e.target.value as Plan)}>
+          <select
+            id="plan"
+            aria-describedby="plan-summary"
+            className={selectClass}
+            value={plan}
+            onChange={(e) => setPlan(e.target.value as Plan)}
+          >
             {PLANS.map((p) => (
               <option key={p} value={p}>
                 {PLAN_LABELS[p]}
               </option>
             ))}
           </select>
+          <p id="plan-summary" className="text-sm text-muted-foreground">
+            {PLAN_SUMMARIES[plan]}
+          </p>
         </div>
         <label className="flex min-h-11 items-center gap-3 text-sm">
           <input type="checkbox" checked={require2fa} onChange={(e) => setRequire2fa(e.target.checked)} className="size-5 accent-ink" />

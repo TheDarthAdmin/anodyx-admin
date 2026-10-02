@@ -1,6 +1,7 @@
 /** Shapes returned by the platform API (apps/api/src/anodyx/routers/platform.py). */
 
-export type Plan = "trial" | "starter" | "growth" | "volume" | "archive";
+export type Plan = "trial" | "starter" | "professional" | "business" | "enterprise" | "archive";
+export type Feature = "supplier_portal" | "api" | "webhooks" | "erp" | "sso";
 export type TenantStatus = "active" | "suspended";
 
 export type Account = {
@@ -32,7 +33,7 @@ export type TenantUser = {
   id: string;
   email: string;
   display_name: string | null;
-  role: "owner" | "editor" | "viewer";
+  role: "owner" | "compliance" | "editor" | "viewer";
   has_password: boolean;
   totp_enabled: boolean;
   passkeys: number;
@@ -40,7 +41,13 @@ export type TenantUser = {
   created_at: string;
 };
 
-export type Limits = { name: string; models: number | null; passports: number | null; suppliers: number | null; editable: boolean };
+export type Limits = {
+  models: number | null;
+  passports: number | null;
+  suppliers: number | null;
+  editable: boolean;
+  features?: Feature[];
+};
 
 export type TenantDetail = {
   id: string;
@@ -78,6 +85,8 @@ export type Overview = {
   open_requests: number;
   registry_failed: number;
   active_support_sessions: number;
+  /** All tenants together, from the daily usage records (ADR 0017). */
+  usage_30d?: { passports_created: number; passports_active: number; api_calls: number; scans: number };
   health: { api: string; database: string; worker: string };
 };
 

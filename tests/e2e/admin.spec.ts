@@ -50,10 +50,18 @@ test("login with password + TOTP, manage a tenant, add a passkey", async ({ page
   await page.getByLabel("Naam van de organisatie").fill("Fietsen Peeters BV");
   await page.getByLabel("E-mailadres van de eigenaar").fill("eigenaar@peeters.example.com");
   await page.getByLabel("Plan").selectOption("starter");
+  await expect(page.locator("#plan-summary")).toContainText("Geen leveranciersportaal");
   await page.getByRole("button", { name: "Tenant aanmaken" }).click();
   await expect(page.getByTestId("copy-once-value")).toContainText("/auth/verify?token=");
   await page.getByRole("link", { name: "Naar de tenant" }).click();
   await expect(page.getByRole("heading", { name: "Fietsen Peeters BV" })).toBeVisible();
+
+  // Plan change to Business (ADR 0017): features follow the plan.
+  await expect(page.getByText("In het plan Starter")).toBeVisible();
+  await page.getByLabel("Plan").selectOption("business");
+  await expect(page.locator("#plan-summary")).toContainText("ERP-koppelingen");
+  await page.getByRole("button", { name: "Opslaan" }).click();
+  await expect(page.getByText("In het plan Business")).toBeVisible();
 
   // Suspend (reason required) and reactivate.
   await page.getByRole("button", { name: "Tenant opschorten" }).click();
