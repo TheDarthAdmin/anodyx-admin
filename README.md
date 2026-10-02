@@ -6,7 +6,7 @@ Platform-beheerportaal voor [Anodyx](https://github.com/TheDarthAdmin/anodyx) (A
 
 | Variabele | Voorbeeld | Wat |
 |---|---|---|
-| `PLATFORM_API_URL` | `http://api-leevk9g1ded8ub2lw43akqv0:8000` | Interne URL van de Anodyx-API (zonder `/platform`) |
+| `PLATFORM_API_URL` | `http://api:8000` | Interne URL van de Anodyx-API (zonder `/platform`) |
 | `PLATFORM_SHARED_SECRET` | 64 hex-tekens | Gelijk aan `PLATFORM_SHARED_SECRET` van de API |
 
 Aan de API-kant horen daarbij: `PLATFORM_SHARED_SECRET`, `PLATFORM_DB_PASSWORD`,
@@ -21,9 +21,8 @@ beheerder (zie `anodyx/platform_bootstrap.py` in de main repo).
 2. Domein: `http://anodyx-admin.darthadmin.com` (Cloudflare Tunnel → Traefik op `10.1.10.50:80`; TLS stopt
    bij Cloudflare, vandaar `http://` in Coolify).
 3. **Intern netwerk naar de API** (niet via internet):
-   - Zet bij de Anodyx-compose-resource (`leevk9g1ded8ub2lw43akqv0`) **"Connect to predefined network"** aan.
-   - Deze admin-resource staat dan op hetzelfde `coolify`-netwerk.
-   - `PLATFORM_API_URL=http://api-leevk9g1ded8ub2lw43akqv0:8000`.
+   - De Anodyx-stack blijft ongewijzigd. `docker-compose.yml` hangt de admin-container aan het netwerk van die stack als *external network* (`ANODYX_NETWORK`, standaard `leevk9g1ded8ub2lw43akqv0`, de resource-UUID van Anodyx in Coolify).
+   - `PLATFORM_API_URL=http://api:8000` (standaard).
    - **Te verifiëren na de eerste deploy:** Coolify geeft services op het voorgedefinieerde netwerk de naam
      `<service>-<resource-uuid>`. Test vanuit de admin-container met
      `wget -qO- http://api-leevk9g1ded8ub2lw43akqv0:8000/healthz`.

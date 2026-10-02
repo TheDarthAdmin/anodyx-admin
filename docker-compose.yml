@@ -1,0 +1,27 @@
+# Deployed by Coolify as its own Docker Compose resource (project "Anodyx Admin").
+# The portal joins the Anodyx stack's network as an *external* network, so it reaches
+# the API at http://api:8000 internally; the Anodyx stack itself is left untouched.
+# Coolify names each compose stack's network after its resource UUID.
+services:
+  admin:
+    build: .
+    restart: unless-stopped
+    environment:
+      PLATFORM_API_URL: ${PLATFORM_API_URL:-http://api:8000}
+      PLATFORM_SHARED_SECRET: ${PLATFORM_SHARED_SECRET}
+      NODE_ENV: production
+    expose: ["3000"]
+    networks:
+      - default
+      - anodyx
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+networks:
+  anodyx:
+    external: true
+    name: ${ANODYX_NETWORK:-leevk9g1ded8ub2lw43akqv0}
