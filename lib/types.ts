@@ -91,3 +91,24 @@ export type AuditEntry = {
 };
 
 export type Admin = { id: string; email: string; display_name: string | null; active: boolean; created_at: string };
+
+export type MailSecurity = "starttls" | "ssl" | "none";
+export type MailSource = "platform" | "env" | "console" | "file";
+
+/** GET /platform/settings/mail. The password is never returned, only `has_password`. */
+export type MailSettings = {
+  configured: boolean;
+  enabled: boolean;
+  verified_at: string | null;
+  last_test_error?: string | null;
+  host?: string;
+  port?: number;
+  security?: MailSecurity;
+  username?: string | null;
+  has_password?: boolean;
+  from_address?: string;
+  from_name?: string | null;
+  active_source: MailSource;
+};
+
+export type MailTestResult = MailSettings & { ok: boolean; error: string | null };

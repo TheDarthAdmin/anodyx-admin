@@ -51,3 +51,47 @@ export async function logout(page: Page) {
   await page.getByRole("button", { name: "Uitloggen" }).last().click();
   await expect(page).toHaveURL(/\/login/);
 }
+
+/**
+ * A minimal SMTP sink (plain, no auth) so the real API can send a test mail.
+ * Collects the DATA payloads; enough of RFC 5321 for Python's smtplib.
+ */
+export async function startSmtpSink(): Promise<{ port: number; messages: string[]; close: () => Promise<void> }> {
+  const { createServer } = await import("node:net");
+  const messages: string[] = [];
+  const server = createServer((socket) => {
+    let buffer = "";
+    let inData = false;
+    let data = "";
+    socket.write("220 sink ESMTP\r\n");
+    socket.on("data", (chunk) => {
+      buffer += chunk.toString("utf8");
+      let idx: number;
+      while ((idx = buffer.indexOf("\r\n")) >= 0) {
+        const line = buffer.slice(0, idx);
+        buffer = buffer.slice(idx + 2);
+        if (inData) {
+          if (line === ".") {
+            inData = false;
+            messages.push(data);
+            data = "";
+            socket.write("250 queued\r\n");
+          } else data += line + "\n";
+          continue;
+        }
+        const cmd = line.slice(0, 4).toUpperCase();
+        if (cmd === "EHLO") socket.write("250-sink\r\n250 OK\r\n");
+        else if (cmd === "HELO") socket.write("250 sink\r\n");
+        else if (cmd === "DATA") {
+          inData = true;
+          socket.write("354 go ahead\r\n");
+        } else if (cmd === "QUIT") {
+          socket.end("221 bye\r\n");
+        } else socket.write("250 OK\r\n");
+      }
+    });
+  });
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const port = (server.address() as { port: number }).port;
+  return { port, messages, close: () => new Promise((r) => server.close(() => r())) };
+}

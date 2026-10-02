@@ -12,7 +12,7 @@ export async function postJson(path: string, payload?: unknown): Promise<ApiResu
 }
 
 export async function requestJson(
-  method: "POST" | "PATCH" | "DELETE",
+  method: "POST" | "PUT" | "PATCH" | "DELETE",
   path: string,
   payload?: unknown,
 ): Promise<ApiResult> {
@@ -68,6 +68,7 @@ const MESSAGES: Record<string, string> = {
   password_like_email: "Je wachtwoord mag niet je e-mailadres zijn.",
   webauthn_invalid: "De beveiligingssleutel werd niet herkend. Probeer opnieuw.",
   not_authenticated: "Je sessie is verlopen. Log opnieuw in.",
+  mail_not_configured: "Sla eerst een SMTP-server op.",
 };
 
 export function messageFor(result: ApiResult, fallback = "Dat is niet gelukt. Probeer het opnieuw."): string {

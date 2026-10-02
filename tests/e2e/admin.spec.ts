@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { addVirtualAuthenticator, bootstrapLink, logout, totp } from "./helpers";
+import { addVirtualAuthenticator, bootstrapLink, logout, startSmtpSink, totp } from "./helpers";
 
 const EMAIL = "admin@anodyx.dev";
 const PASSWORD = "lange beheerderszin voor e2e";
@@ -82,6 +82,36 @@ test("login with password + TOTP, manage a tenant, add a passkey", async ({ page
   await expect(page.getByRole("cell", { name: "support.read" }).first()).toBeVisible();
   await page.getByRole("button", { name: "Sessie beëindigen" }).click();
   await expect(page.getByRole("heading", { name: "Velora Mobility BV" })).toBeVisible();
+
+  // Outgoing mail: a failing server stays inactive, a working one activates after the test.
+  await page.getByRole("navigation", { name: "Hoofdnavigatie" }).getByRole("link", { name: "E-mail" }).click();
+  await expect(page.getByTestId("mail-status")).toContainText("Nog niet ingesteld");
+  const sink = await startSmtpSink();
+  try {
+    await page.getByLabel("Server", { exact: true }).fill("127.0.0.1");
+    await page.getByText("Geen (alleen intern netwerk)").click();
+    await page.getByLabel("Poort", { exact: true }).fill("1"); // nothing listens here
+    await page.getByLabel("Afzenderadres").fill("noreply@anodyx.example.com");
+    await page.getByRole("button", { name: "Opslaan" }).click();
+    await expect(page.getByTestId("mail-status")).toContainText("Niet actief");
+    await page.getByRole("button", { name: "Testmail versturen" }).click();
+    await expect(page.getByText("Testmail niet verstuurd. De instelling blijft uit.")).toBeVisible();
+    await expect(page.getByTestId("mail-status")).toContainText("laatste testmail mislukt");
+
+    await page.getByLabel("Poort", { exact: true }).fill(String(sink.port));
+    await page.getByRole("button", { name: "Opslaan" }).click();
+    await expect(page.getByText("Opgeslagen. Verstuur nu een testmail")).toBeVisible();
+    await page.getByRole("button", { name: "Testmail versturen" }).click();
+    await expect(page.getByText(`Testmail verstuurd naar ${EMAIL}`)).toBeVisible();
+    await expect(page.getByTestId("mail-status")).toContainText("Actief");
+    expect(sink.messages.join("\n")).toContain("Subject: Anodyx testmail");
+
+    await page.getByRole("button", { name: "Uitschakelen" }).click();
+    await page.getByRole("dialog").getByRole("button", { name: "Uitschakelen" }).click();
+    await expect(page.getByTestId("mail-status")).toContainText("Niet actief");
+  } finally {
+    await sink.close();
+  }
 
   // A security key for the next login (virtual FIDO2 authenticator over CDP).
   await page.getByRole("navigation", { name: "Hoofdnavigatie" }).getByRole("link", { name: "Mijn account" }).click();

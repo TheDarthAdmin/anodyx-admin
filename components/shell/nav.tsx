@@ -1,6 +1,6 @@
 "use client";
 
-import { Buildings, Gauge, ListMagnifyingGlass, UserGear, UsersThree } from "@phosphor-icons/react";
+import { Buildings, EnvelopeSimple, Gauge, ListMagnifyingGlass, UserGear, UsersThree } from "@phosphor-icons/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -11,6 +11,7 @@ const ITEMS = [
   { href: "/tenants", label: "Tenants", icon: Buildings, match: (p: string) => p.startsWith("/tenants") || p.startsWith("/support") },
   { href: "/beheerders", label: "Beheerders", icon: UsersThree, match: (p: string) => p.startsWith("/beheerders") },
   { href: "/audit", label: "Auditlog", icon: ListMagnifyingGlass, match: (p: string) => p.startsWith("/audit") },
+  { href: "/instellingen/e-mail", label: "E-mail", icon: EnvelopeSimple, match: (p: string) => p.startsWith("/instellingen/e-mail") },
   { href: "/account", label: "Mijn account", icon: UserGear, match: (p: string) => p.startsWith("/account") },
 ];
 
