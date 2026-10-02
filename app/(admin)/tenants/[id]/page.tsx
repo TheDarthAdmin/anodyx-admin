@@ -77,14 +77,14 @@ export default async function TenantPage({ params }: PageProps<"/tenants/[id]">)
               <UsageMeter label="Paspoorten" used={t.usage.passports} limit={t.limits.passports} />
               <UsageMeter label="Leveranciers" used={t.usage.suppliers} limit={t.limits.suppliers} />
             </Panel>
-            <dl className="grid grid-cols-3 gap-4 text-sm">
+            <dl className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-3">
               {[
                 ["Units", t.usage.units],
                 ["Open aanvragen", t.usage.open_requests],
                 ["Registratiefouten", t.usage.registry_failed],
               ].map(([label, value]) => (
-                <div key={label as string} className="grid gap-0.5">
-                  <dt className="text-muted-foreground">{label}</dt>
+                <div key={label as string} className="grid min-w-0 gap-0.5">
+                  <dt className="hyphens-auto break-words text-muted-foreground" lang="nl">{label}</dt>
                   <dd className="num text-lg">{formatNumber(value as number)}</dd>
                 </div>
               ))}
