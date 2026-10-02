@@ -1,0 +1,155 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Anodyx brand tokens (main repo CLAUDE.md "Branding"). The admin portal uses the
+   same palette; what marks it as admin is the ink shell and the ADMIN tag. */
+:root {
+  --ink: #0e1411;
+  --volt: #c6f432;
+  --paper: #f3f1ea;
+  --graphite: #2a332e;
+  --signal: #ff6b2c;
+  --signal-text: #a8390a;
+  --muted: #4a534e;
+  --paper-deep: #e7e4da;
+  --line: #cfcbbe;
+  --fog: #b5bdb8;
+  --white: #ffffff;
+  /* Shell (sidebar) text steps on ink. */
+  --shell-text: #d6dcd8;
+  --shell-dim: #9aa39d;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--white);
+  --card-foreground: var(--ink);
+  --popover: var(--white);
+  --popover-foreground: var(--ink);
+  --primary: var(--volt);
+  --primary-foreground: var(--ink);
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
+  --muted-foreground: var(--muted);
+  --accent: var(--paper-deep);
+  --accent-foreground: var(--ink);
+  --destructive: var(--signal);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--ink);
+  --radius: 0.75rem;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-volt: var(--volt);
+  --color-paper: var(--paper);
+  --color-graphite: var(--graphite);
+  --color-signal: var(--signal);
+  --color-signal-text: var(--signal-text);
+  --color-paper-deep: var(--paper-deep);
+  --color-line: var(--line);
+  --color-fog: var(--fog);
+  --color-shell-text: var(--shell-text);
+  --color-shell-dim: var(--shell-dim);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--paper-deep);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-heading: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --radius-sm: 12px;
+  --radius-md: 12px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 20px;
+  --radius-4xl: 20px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scrollbar-color: var(--line) transparent;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  ::selection {
+    background: var(--volt);
+    color: var(--ink);
+  }
+  input,
+  textarea {
+    caret-color: var(--ink);
+  }
+  a,
+  button,
+  summary {
+    -webkit-tap-highlight-color: transparent;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+  dialog::backdrop {
+    background: color-mix(in oklch, var(--ink) 55%, transparent);
+  }
+  dialog[open] {
+    animation: dialog-in 180ms var(--ease-out);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    dialog[open] {
+      animation: none;
+    }
+  }
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+/* Metadata labels: mono uppercase with 0.08em tracking (brand rule). */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@utility wordmark {
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+@utility num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
