@@ -57,6 +57,8 @@ const MESSAGES: Record<string, string> = {
   reason_required: "Geef een reden op voor het opschorten.",
   tenant_not_found: "Deze tenant bestaat niet (meer).",
   user_not_found: "Deze gebruiker bestaat niet (meer).",
+  admin_not_found: "Deze beheerder bestaat niet (meer).",
+  use_account_page: "Je eigen tweede factor beheer je op de pagina Account.",
   support_access_disabled: "De klant heeft support-toegang uitgezet.",
   support_session_inactive: "Deze support-sessie is verlopen of beëindigd.",
   last_second_factor: "Dit is je enige tweede factor. Voeg eerst een andere toe.",
